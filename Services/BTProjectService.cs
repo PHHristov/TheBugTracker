@@ -32,7 +32,35 @@ namespace TheBugTracker.Services
 
         public async Task<bool> AddUserToProjectAsync(string userId, int projectId)
         {
-            throw new NotImplementedException();
+            BTUser user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user != null)
+            {
+                Project project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == projectId);
+                if(!await IsUserOnProjectAsync(userId, projectId))
+                {
+                    try
+                    {
+                        project.Members.Add(user);
+                        await _context.SaveChangesAsync();
+                        return true;
+                    }
+                    catch (Exception)
+                    {
+                        
+                        throw;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public async Task ArchiveProjectAsync(Project project)
@@ -50,7 +78,7 @@ namespace TheBugTracker.Services
         public async Task<List<Project>> GetAllProjectsByCompany(int companyId)
         {
             List<Project> projects = new();
-            projects = await _context.Projects.Where(p => p.CompanyId == companyId)
+            projects = await _context.Projects.Where(p => p.CompanyId == companyId && p.Archived == false)
                                             .Include(p => p.Members)
                                             .Include(p => p.Tickets)
                                                 .ThenInclude(t => t.ProjectId)
@@ -123,7 +151,38 @@ namespace TheBugTracker.Services
 
         public async Task<List<Project>> GetUserProjectsAsync(string userId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                List<Project> userProjects =  (await _context.Users
+                                                            .Include(u => u.Projects)
+                                                                .ThenInclude(p => p.Company)
+                                                            .Include(u => u.Projects)
+                                                                .ThenInclude(p => p.Members)
+                                                            .Include(u => u.Projects)
+                                                                .ThenInclude(p => p.Tickets)
+                                                            .Include(u => u.Projects)
+                                                                .ThenInclude(p => p.Tickets)
+                                                                    .ThenInclude( t => t.DeveloperUser)
+                                                            .Include(u => u.Projects)
+                                                                .ThenInclude(p => p.Tickets)
+                                                                    .ThenInclude(t => t.OwnerUser)
+                                                            .Include(u => u.Projects)
+                                                                .ThenInclude(p => p.Tickets)
+                                                                    .ThenInclude(t => t.TicketPriority)
+                                                            .Include(u => u.Projects)
+                                                                .ThenInclude(p => p.Tickets)
+                                                                    .ThenInclude(t => t.TicketStatus)
+                                                            .Include(u => u.Projects)
+                                                                .ThenInclude(p => p.Tickets)
+                                                                    .ThenInclude(t => t.TicketType)
+                                                            .FirstOrDefaultAsync(u => u.Id == user.Id)).Projects.ToList();
+                return userProjects;
+                                                            
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"**** ERROR **** - Error  Getting user project list. --> {ex.Message}");
+            }
         }
 
         public async Task<List<BTUser>> GetUsersNotOnProjectAsync(int projectId, int companyId)
@@ -131,9 +190,21 @@ namespace TheBugTracker.Services
             throw new NotImplementedException();
         }
 
-        public async Task<bool> IsUserOnProject(string userId, int projectId)
+        public async Task<bool> IsUserOnProjectAsync(string userId, int projectId)
         {
-            throw new NotImplementedException();
+            Project project = await _context.Projects
+                                            .Include(p => p.Members)
+                                            .FirstOrDefaultAsync(p => p.Id == projectId);
+            
+            bool result = false;
+
+            if (project != null)
+            {
+                result = project.Members.Any(m => m.Id == userId);
+                return result;
+            }
+
+            return false;
         }
 
         public async Task<int> LookupProjectPriorityId(string priorityName)
@@ -150,7 +221,29 @@ namespace TheBugTracker.Services
 
         public async Task RemoveUserFromProjectAsync(string userId, int projectId)
         {
-            throw new NotImplementedException();
+            try 
+            {
+                BTUser user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+                Project project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == projectId);
+                try
+                {
+                    if (IsUserOnProjectAsync(userId, projectId))
+                    {
+                        project.Members.Remove(user);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+                catch (Exception)
+                {
+                    
+                    throw;
+                }
+                
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"**** ERROR **** - Error Removing User from Project ---> {ex.Message}");
+            }
         }
 
         public async Task RemoveUsersFromProjectByRoleAsync(string role, int projectId)
