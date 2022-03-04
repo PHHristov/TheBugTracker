@@ -2,18 +2,16 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TheBugTracker.Data;
 
-namespace TheBugTracker.Data.Migrations
+namespace TheBugTracker.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220104192400_Data Models")]
-    partial class DataModels
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -455,16 +453,13 @@ namespace TheBugTracker.Data.Migrations
                     b.Property<int>("ProjectId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("TicketPriorityId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("TicketPropertyId")
+                    b.Property<int>("TicketPriorityId")
                         .HasColumnType("integer");
 
                     b.Property<int>("TicketStatusId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("TicketTypeID")
+                    b.Property<int>("TicketTypeId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Title")
@@ -487,7 +482,7 @@ namespace TheBugTracker.Data.Migrations
 
                     b.HasIndex("TicketStatusId");
 
-                    b.HasIndex("TicketTypeID");
+                    b.HasIndex("TicketTypeId");
 
                     b.ToTable("Tickets");
                 });
@@ -717,7 +712,7 @@ namespace TheBugTracker.Data.Migrations
             modelBuilder.Entity("TheBugTracker.Models.Invite", b =>
                 {
                     b.HasOne("TheBugTracker.Models.Company", "Company")
-                        .WithMany()
+                        .WithMany("Invites")
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -805,7 +800,9 @@ namespace TheBugTracker.Data.Migrations
 
                     b.HasOne("TheBugTracker.Models.TicketPriority", "TicketPriority")
                         .WithMany()
-                        .HasForeignKey("TicketPriorityId");
+                        .HasForeignKey("TicketPriorityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("TheBugTracker.Models.TicketStatus", "TicketStatus")
                         .WithMany()
@@ -815,7 +812,7 @@ namespace TheBugTracker.Data.Migrations
 
                     b.HasOne("TheBugTracker.Models.TicketType", "TicketType")
                         .WithMany()
-                        .HasForeignKey("TicketTypeID")
+                        .HasForeignKey("TicketTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -885,6 +882,8 @@ namespace TheBugTracker.Data.Migrations
 
             modelBuilder.Entity("TheBugTracker.Models.Company", b =>
                 {
+                    b.Navigation("Invites");
+
                     b.Navigation("Members");
 
                     b.Navigation("Projects");
