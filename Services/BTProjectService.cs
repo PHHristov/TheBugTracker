@@ -31,6 +31,9 @@ namespace TheBugTracker.Services
         public async Task<bool> AddProjectManagerAsync(string userId, int projectId)
         {
             BTUser currentPM = await GetProjectManagerAsync(projectId);
+            BTUser newPM = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            Project project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == projectId);
+
             if (currentPM != null)
             {
                 try
@@ -46,7 +49,8 @@ namespace TheBugTracker.Services
 
             try
             {
-                await AddProjectManagerAsync(userId, projectId);
+                project.Members.Add(newPM);
+                await _context.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex)
