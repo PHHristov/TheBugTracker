@@ -242,7 +242,7 @@ namespace TheBugTracker.Services
                                                             .Include(u => u.Projects)
                                                                 .ThenInclude(p => p.Tickets)
                                                                     .ThenInclude(t => t.TicketType)
-                                                            .FirstOrDefaultAsync(u => u.Id == u.Id)).Projects.ToList();
+                                                            .FirstOrDefaultAsync(u => u.Id == userId)).Projects.ToList();
                 return userProjects;
                                                             
             }
