@@ -119,7 +119,7 @@ namespace TheBugTracker.Services
             return teamMembers;
         }
 
-        public async Task<List<Project>> GetAllProjectsByCompany(int companyId)
+        public async Task<List<Project>> GetAllProjectsByCompanyAsync(int companyId)
         {
             List<Project> projects = new();
             projects = await _context.Projects.Where(p => p.CompanyId == companyId && p.Archived == false)
@@ -150,7 +150,7 @@ namespace TheBugTracker.Services
 
         public async Task<List<Project>> GetAllProjectsByPriority(int companyId, string priorityName)
         {
-            List<Project> projects = await GetAllProjectsByCompany(companyId);
+            List<Project> projects = await GetAllProjectsByCompanyAsync(companyId);
             int priorityId = await LookupProjectPriorityId(priorityName);
             return projects.Where(p => p.ProjectPriorityId == priorityId).ToList();
 
@@ -159,7 +159,7 @@ namespace TheBugTracker.Services
 
         public async Task<List<Project>> GetArchivedProjectsByCompany(int companyId)
         {
-            List<Project> projects = await GetAllProjectsByCompany(companyId);
+            List<Project> projects = await GetAllProjectsByCompanyAsync(companyId);
             return projects.Where(p => p.Archived == true).ToList();
         }
 
