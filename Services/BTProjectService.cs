@@ -125,7 +125,7 @@ namespace TheBugTracker.Services
             projects = await _context.Projects.Where(p => p.CompanyId == companyId && p.Archived == false)
                                             .Include(p => p.Members)
                                             .Include(p => p.Tickets)
-                                                .ThenInclude(t => t.ProjectId)
+                                                .ThenInclude(t => t.Comments)
                                             .Include(p => p.Tickets)
                                                 .ThenInclude(t => t.Attachments)
                                             .Include(p => p.Tickets)

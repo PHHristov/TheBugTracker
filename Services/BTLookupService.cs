@@ -28,19 +28,44 @@ namespace TheBugTracker.Services
             }
         }
 
-        public Task<List<TicketPriority>> GetTicketPrioritiesAsync()
+        public async Task<List<TicketPriority>> GetTicketPrioritiesAsync()
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                return await _context.TicketPriorities.ToListAsync();
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }
+
         }
 
-        public Task<List<TicketStatus>> GetTicketStatusesAsync()
+        public async Task<List<TicketStatus>> GetTicketStatusesAsync()
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                return await _context.TicketStatuses.ToListAsync();
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }
         }
 
-        public Task<List<TicketType>> GetTicketTypesAsync()
+        public async Task<List<TicketType>> GetTicketTypesAsync()
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                return await _context.TicketTypes.ToListAsync();
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }
         }
     }
 }
