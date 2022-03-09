@@ -300,6 +300,28 @@ namespace TheBugTracker.Services
             return users.Where(u => u.CompanyId == companyId).ToList();
         }
 
+        public async Task<bool> IsAssignedProjectManagerAsync(string userId, int projectId)
+        {
+            try
+            {
+                string projetManagerId = (await GetProjectManagerAsync(projectId))?.Id;
+
+                if (userId == projetManagerId)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         public async Task<bool> IsUserOnProjectAsync(string userId, int projectId)
         {
             Project project = await _context.Projects
