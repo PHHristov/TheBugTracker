@@ -156,7 +156,6 @@
                             <hr />
                         </div>
                         <div class="body" style="overflow-y:auto;height:300px;background-color:antiquewhite">
-                            @* Project Activity loop *@
                             @foreach (TicketHistory history in await HistoryService.GetProjectTicketsHistoriesAsync(Model.Id, btUser.CompanyId))
                             {
                                 <div class="">
@@ -201,48 +200,48 @@
                                     </thead>
                                     <tbody>
                                         @foreach (var ticket in Model.Tickets.OrderByDescending(d => d.Created))
-  {
-      <tr>
-          <td><a asp-action="Details" asp-controller="Tickets" asp-route-id="@ticket.Id" style="color:black"><strong>@ticket.Title</strong></a> </td>
-          <td>
-              @if (ticket.DeveloperUserId != null)
-              {
-                  @ticket.DeveloperUser?.FullName
-              }
-              else
-              {
-                  if (User.IsInRole(nameof(Roles.Admin)) || User.IsInRole(nameof(Roles.ProjectManager)))
-                  {
-                      <a class="btn btn-xs btn-info" asp-action="AssignDeveloper" asp-controller="Home" asp-route-ticketId="@ticket.Id">Assign Dev</a>
-                  }
+                                              {
+                                                  <tr>
+                                                      <td><a asp-action="Details" asp-controller="Tickets" asp-route-id="@ticket.Id" style="color:black"><strong>@ticket.Title</strong></a> </td>
+                                                      <td>
+                                                          @if (ticket.DeveloperUserId != null)
+                                                          {
+                                                              @ticket.DeveloperUser?.FullName
+                                                          }
+                                                          else
+                                                          {
+                                                              if (User.IsInRole(nameof(Roles.Admin)) || User.IsInRole(nameof(Roles.ProjectManager)))
+                                                              {
+                                                                  <a class="btn btn-xs btn-info" asp-action="AssignDeveloper" asp-controller="Home" asp-route-ticketId="@ticket.Id">Assign Dev</a>
+                                                              }
 
-              }
-          </td>
-              @if (ticket.TicketStatus.Name == "New")
-              {
-                  <td><span class="badge-success">@ticket.TicketStatus.Name </span></td>
+                                                          }
+                                                      </td>
+                                                          @if (ticket.TicketStatus.Name == "New")
+                                                          {
+                                                              <td><span class="badge-success">@ticket.TicketStatus.Name </span></td>
 
-              }
-              else
-              {
-                  <td><span class="badge-primary">@ticket.TicketStatus.Name </span></td>
-              }
-              <td><span class="badge-warning">@ticket.TicketPriority.Name </span></td>
-              <td>@ticket.Created.ToString("MM-dd-yyyy")</td>
-              <td>
-                  <a class="btn btn-sm btn-outline-info" asp-action="Details" asp-controller="Tickets" asp-route-id="@ticket.Id"><i class="fs-5 bi-justify"></i></a>
-                  @if (ticket.DeveloperUserId == btUser.Id || ticket.OwnerUserId == btUser.Id || (projectManager?.Id == btUser.Id) || User.IsInRole(nameof(Roles.Admin)))
-                  {
-                      <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-controller="Tickets" asp-route-id="@ticket.Id"><i class="fs-5 bi-pencil"></i></a>
-                  }
+                                                          }
+                                                          else
+                                                          {
+                                                              <td><span class="badge-primary">@ticket.TicketStatus.Name </span></td>
+                                                          }
+                                                          <td><span class="badge-warning">@ticket.TicketPriority.Name </span></td>
+                                                          <td>@ticket.Created.ToString("MM-dd-yyyy")</td>
+                                                          <td>
+                                                              <a class="btn btn-sm btn-outline-info" asp-action="Details" asp-controller="Tickets" asp-route-id="@ticket.Id"><i class="fs-5 bi-justify"></i></a>
+                                                              @if (ticket.DeveloperUserId == btUser.Id || ticket.OwnerUserId == btUser.Id || (projectManager?.Id == btUser.Id) || User.IsInRole(nameof(Roles.Admin)))
+                                                              {
+                                                                  <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-controller="Tickets" asp-route-id="@ticket.Id"><i class="fs-5 bi-pencil"></i></a>
+                                                              }
 
-                  @if (User.IsInRole("Admin") || (projectManager?.Id == btUser.Id))
-                  {
-                      <a class="btn btn-sm btn-outline-danger"><i class="fs-5 bi-archive"></i></a>
-                  }
-          </td>
-      </tr>
-  }
+                                                              @if (User.IsInRole("Admin") || (projectManager?.Id == btUser.Id))
+                                                              {
+                                                                  <a class="btn btn-sm btn-outline-danger"><i class="fs-5 bi-archive"></i></a>
+                                                              }
+                                                      </td>
+                                                  </tr>
+                                              }
                                     </tbody>
                                 </table>
                             </div>
