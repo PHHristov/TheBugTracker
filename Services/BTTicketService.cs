@@ -36,8 +36,27 @@ namespace TheBugTracker.Services
             }
             
         }
+        public async Task AddTicketAttachmentAsync(TicketAttachment ticketAttachment)
+        {
+            try
+            {
+                await _context.AddAsync(ticketAttachment);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
 
-        public async Task ArchiveTicketAsync(Ticket ticket)
+                throw;
+            }
+        }
+
+        public async Task AddTicketCommetnAsync(TicketComment ticketComment)
+		{
+			await _context.AddAsync(ticketComment);
+            await _context.SaveChangesAsync();
+		}
+
+		public async Task ArchiveTicketAsync(Ticket ticket)
         {
             try
             {
@@ -270,6 +289,23 @@ namespace TheBugTracker.Services
             }
         }
 
+        public async Task<TicketAttachment> GetTicketAttachmentByIdAsync(int ticketAttachmentId)
+        {
+            try
+            {
+                TicketAttachment ticketAttachment = await _context.TicketAttachments
+                                                                  .Include(t => t.User)
+                                                                  .FirstOrDefaultAsync(t => t.Id == ticketAttachmentId);
+                return ticketAttachment;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
         public async Task<Ticket> GetTicketByIdAsync(int ticketId)
         {
             try
@@ -301,7 +337,7 @@ namespace TheBugTracker.Services
             try
             {
                 Ticket ticket = (await GetAllTicketsByCompanyAsync(companyId)).FirstOrDefault(t => t.Id == ticketId);
-                if (ticket?.DeveloperUserId != null) ;
+                if (ticket?.DeveloperUserId != null);
                 {
                     developer = ticket.DeveloperUser;
                 }
