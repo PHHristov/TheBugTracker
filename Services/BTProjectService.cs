@@ -49,7 +49,9 @@ namespace TheBugTracker.Services
 
             try
             {
+                await _roleService.AddUserToRoleAsync(newPM, nameof(Roles.ProjectManager));
                 project.Members.Add(newPM);
+                
                 await _context.SaveChangesAsync();
                 return true;
             }
