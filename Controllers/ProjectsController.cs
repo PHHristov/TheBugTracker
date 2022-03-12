@@ -99,6 +99,17 @@ namespace TheBugTracker.Controllers
             return View(projects);
         }
 
+        //GET: Assign PM
+        public async Task<IActionResult> AssignPM(int projectId, int userId)
+        {
+            int companyId = User.Identity.GetCompanyId().Value;
+
+            AssignPMViewModel model = new();
+            model.Project = await _projectService.GetProjectByIdAsync(projectId, companyId);
+            model.PMList = new SelectList(await _rolesService.GetUsersInRoleAsync(nameof(Roles.ProjectManager), companyId), "Id", "FullName");
+            return View(model);
+        }
+
         // GET: Projects/Details/5
         public async Task<IActionResult> Details(int? id)
         {
