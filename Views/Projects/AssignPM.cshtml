@@ -17,7 +17,7 @@
 
             <div class="form-group">
                 <label class=control-label>Select Project Manager</label>
-                <select asp-for="PMID" class="form-control" itemscope="@Model.PMList">
+                <select asp-for="PMID" class="form-control" asp-items="@Model.PMList">
                     <option></option>
                 </select>
                 <input type="submit" value="Assign" class="btn btn-primary" />

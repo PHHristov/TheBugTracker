@@ -231,9 +231,9 @@ namespace TheBugTracker.Controllers
 
                     await _projectService.AddNewProjectAsync(model.Project);
 
-                    if (!string.IsNullOrEmpty(model.PmId))
+                    if (!string.IsNullOrEmpty(model.PMID))
                     {
-                        await _projectService.AddProjectManagerAsync(model.PmId, model.Project.Id);
+                        await _projectService.AddProjectManagerAsync(model.PMID, model.Project.Id);
                     }
                 }
                 catch (Exception)
@@ -283,9 +283,9 @@ namespace TheBugTracker.Controllers
 
                     await _projectService.UpdateProjectAsync(model.Project);
 
-                    if (!string.IsNullOrEmpty(model.PmId))
+                    if (!string.IsNullOrEmpty(model.PMID))
                     {
-                        await _projectService.AddUserToProjectAsync(model.PmId, model.Project.Id);
+                        await _projectService.AddUserToProjectAsync(model.PMID, model.Project.Id);
                     }
                 }
                 catch (Exception)
