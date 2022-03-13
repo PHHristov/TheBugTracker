@@ -105,11 +105,11 @@ namespace TheBugTracker.Controllers
 
         //GET: AssignDeveloper
         [HttpGet]
-        public async Task<IActionResult> AssignDeveloper(int id)
+        public async Task<IActionResult> AssignDeveloper(int ticketId)
         {
             AssignDeveloperViewModel model = new();
-            model.Ticket = await _ticketService.GetTicketByIdAsync(id);
-            model.Developers = new SelectList(await _projectService.GetProjectMembersByRoleAsync(model.Ticket.ProjectId, nameof(Roles.Developer)),
+            model.Ticket = await _ticketService.GetTicketByIdAsync(ticketId);
+            model.Developers = new SelectList(await _projectService.GetProjectMembersByRoleAsync(model.Ticket.Project.Id, nameof(Roles.Developer)),
                                                     "Id", "FullName");
             return View(model);
         }
