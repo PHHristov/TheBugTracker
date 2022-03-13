@@ -13,6 +13,7 @@ namespace TheBugTracker.Services.Interfaces
         public Task ArchiveTicketAsync(Ticket ticket);
         public Task AddTicketCommetnAsync(TicketComment ticketComment);
         public Task<TicketAttachment> GetTicketAttachmentByIdAsync(int ticketAttachmentId);
+        public Task<Ticket> GetTicketAsNoTrackingAsync(int ticketId);
         public Task AddTicketAttachmentAsync(TicketAttachment ticketAttachment);
         public Task<List<Ticket>> GetUnassignedTicketsAsync(int companyId);
         public Task AssignTicketAsync(int ticketId, string userId);
