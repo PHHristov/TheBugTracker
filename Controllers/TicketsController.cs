@@ -25,19 +25,21 @@ namespace TheBugTracker.Controllers
         private readonly IBTLookupService _lookupService;
         private readonly IBTTicketService _ticketService;
         private readonly IBTFileService _fileService;
+        private readonly IBTTicketHistoryService _historyService;
 
-		public TicketsController(ApplicationDbContext context, UserManager<BTUser> userManager, IBTProjectService projectService, IBTLookupService lookupService, IBTTicketService ticketService, IBTFileService fileService)
-		{
-			_context = context;
-			_userManager = userManager;
-			_projectService = projectService;
-			_lookupService = lookupService;
-			_ticketService = ticketService;
-			_fileService = fileService;
-		}
+        public TicketsController(ApplicationDbContext context, UserManager<BTUser> userManager, IBTProjectService projectService, IBTLookupService lookupService, IBTTicketService ticketService, IBTFileService fileService, IBTTicketHistoryService historyService)
+        {
+            _context = context;
+            _userManager = userManager;
+            _projectService = projectService;
+            _lookupService = lookupService;
+            _ticketService = ticketService;
+            _fileService = fileService;
+            _historyService = historyService;
+        }
 
-		// GET: Tickets
-		public async Task<IActionResult> Index()
+        // GET: Tickets
+        public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Tickets.Include(t => t.DeveloperUser).Include(t => t.OwnerUser).Include(t => t.Project).Include(t => t.TicketStatus).Include(t => t.TicketType);
             return View(await applicationDbContext.ToListAsync());
@@ -185,6 +187,8 @@ namespace TheBugTracker.Controllers
                 ticket.TicketStatusId = (await _ticketService.LookupTicketStatusIdAsync(nameof(BTTicketStatus.New))).Value;
                 await _ticketService.AddNewTicketAsync(ticket);
                 //TODO: Ticket History
+                Ticket newTicket = await _ticketService.GetTicketAsNoTrackingAsync(ticket.Id);
+                await _historyService.AddHistoryAsync(null, newTicket, btUser.Id);
                 //TODO: Ticket Notification
 
                 return RedirectToAction(nameof(Index));
@@ -293,6 +297,8 @@ namespace TheBugTracker.Controllers
             if (ModelState.IsValid)
             {
                 BTUser btUser = await _userManager.GetUserAsync(User);
+                Ticket oldTicket = await _ticketService.GetTicketAsNoTrackingAsync(ticket.Id);
+
                 try
                 {
                     ticket.Updated = DateTimeOffset.Now;
@@ -309,7 +315,10 @@ namespace TheBugTracker.Controllers
                         throw;
                     }
                 }
-                //TODO: Add Ticket History
+
+                Ticket newTicket = await _ticketService.GetTicketAsNoTrackingAsync(ticket.Id);
+                await _historyService.AddHistoryAsync(oldTicket, newTicket, btUser.Id);
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["TicketPriorityId"] = new SelectList(await _lookupService.GetTicketPrioritiesAsync(), "Id", "Name", ticket.TicketPriorityId);
