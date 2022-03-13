@@ -99,7 +99,7 @@
                                         <h5 class="text-muted m-b-0">Not Assigned</h5>
                                         @if (User.IsInRole(nameof(Roles.Admin)))
                                         {
-                                            <span><a asp-action="AssignProjectManager" asp-controller="Home" asp-route-id="@Model.Id" class="btn align-content-xl-start btn-outline-info">Assign PM</a></span>
+                                            <span><a asp-action="AssignPM" asp-controller="Projects" asp-route-projectId="@Model.Id" class="btn align-content-xl-start btn-outline-info">Assign PM</a></span>
                                         }
                                         
                                     </div>
@@ -131,15 +131,15 @@
                                                 }
                                                 else
                                                 {
-                                                    <img class="" src="https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png" alt="" />
+                                                    <img class="" style="width:30px;height:30px;" src="https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png" alt="" />
                                                 }
-                                                <div class="">
-                                                    <span class="">@member.FullName</span>
-                                                    <span class="">@((await UserManager.GetRolesAsync(member)).FirstOrDefault())</span>
-                                                </div>
+                                               
                                             </div>
                                         </a>
-
+                                        <div class="">
+                                            <span class="">@member.FullName</span>
+                                            <span class="font-size:x-small">[@((await UserManager.GetRolesAsync(member)).FirstOrDefault())]</span>
+                                        </div>
                                     </li>
                                 }
                             </ul>
