@@ -120,6 +120,36 @@ namespace TheBugTracker.Controllers
 
         }
 
+        //POST: Assign Members
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AssignMembers(ProjectMembersViewModel model)
+        {
+            if (model.SelectedUsers != null)
+            {
+                List<string> memberIds = (await _projectService.GetAllProjectMembersExceptPMAsync(model.Project.Id))
+                                                               .Select(m => m.Id)
+                                                               .ToList();
+                //Remove all members
+                foreach(string memberId in memberIds)
+                {
+                    await _projectService.RemoveUserFromProjectAsync(memberId, model.Project.Id);
+                }
+
+                //Add all selected users
+                foreach (string memberId in model.SelectedUsers)
+                {
+                    await _projectService.AddUserToProjectAsync(memberId, model.Project.Id);
+                }
+
+                return RedirectToAction(nameof(Details), "Projects", new { id = model.Project.Id});
+
+            }
+
+            return RedirectToAction(nameof(AssignMembers), new { id = model.Project.Id });
+        }
+        
+
         //GET: Assign PM
         [Authorize(Roles = "Admin")]
         [HttpGet]
