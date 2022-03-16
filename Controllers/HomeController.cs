@@ -61,9 +61,9 @@ namespace TheBugTracker.Controllers
             List<object> chartData = new();
             chartData.Add(new object[] { "ProjectName", "TicketCount" });
 
-            foreach (Project prj in projects)
+            foreach (Project project in projects)
             {
-                chartData.Add(new object[] { prj.Name, prj.Tickets.Count() });
+                chartData.Add(new object[] { project.Name, project.Tickets.Count() });
             }
 
             return Json(chartData);

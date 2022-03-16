@@ -235,11 +235,11 @@ namespace TheBugTracker.Controllers
 
                     throw;
                 }
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(AllProjects));
             }
                 
             //TODO: Redirect to all projects
-            return RedirectToAction("Create");
+            return RedirectToAction(nameof(Create));
             
             
         }
@@ -296,9 +296,9 @@ namespace TheBugTracker.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(AllProjects));
             }
-            return RedirectToAction("Edit");
+            return RedirectToAction(nameof(Edit));
         }
 
         // GET: Projects/Archive/5
@@ -333,7 +333,7 @@ namespace TheBugTracker.Controllers
             
             await _projectService.ArchiveProjectAsync(project);
                         
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(AllProjects));
         }
 
         // GET: Projects/Restore/5
@@ -368,7 +368,7 @@ namespace TheBugTracker.Controllers
 
             await _projectService.RestoreProjectAsync(project);
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(AllProjects));
         }
         private async Task<bool> ProjectExists(int id)
         {

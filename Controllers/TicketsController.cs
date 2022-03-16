@@ -216,7 +216,7 @@ namespace TheBugTracker.Controllers
                 }
                 //TODO: Ticket Notification
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(AllTickets));
             }
 
             if (User.IsInRole(nameof(Roles.Admin)))
