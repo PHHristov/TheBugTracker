@@ -284,6 +284,7 @@
 	</div>
 </div>
 
+
 @section scripts{
 	<!--Google Charts-->
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
@@ -328,7 +329,7 @@
 	function drawChart() {
 		$.ajax({
 			type: "POST",
-			url: "/Home/GglProjectPriority",
+			url: "/Home/GglProjectTickets",
 			data: '{}',
 			contentType: "application/json; charset=utf-8",
 			dataType: "json",
